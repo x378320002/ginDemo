@@ -15,7 +15,7 @@ type User struct {
 }
 
 func FindUserByName(user *User) bool {
-	first := DbOrm.Where("name = ?", user.Name).First(user)
+	first := MyOrm.Where("name = ?", user.Name).First(user)
 	if first.RecordNotFound() {
 		return false
 	}

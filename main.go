@@ -13,7 +13,7 @@ var db *gorm.DB
 var err error
 
 func main() {
-	defer models.DbOrm.Close()
+	defer models.MyOrm.Close()
 	g := gin.Default()
 	apiRouter(g)
 	//webRouter(g)
@@ -35,8 +35,9 @@ func apiRouter(g *gin.Engine) {
 	apiGroup.POST("/modify", apis.Modify())
 
 	apiGroup.POST("/articleList", apis.ArticleList())
-
 	apiGroup.POST("/addArticle", apis.AddArticle())
+	apiGroup.POST("/updateArticle", apis.UpdateArticle())
+	apiGroup.POST("/deleteArticle", apis.DeleteArticle())
 }
 
 func webRouter(g *gin.Engine) {

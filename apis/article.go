@@ -31,18 +31,54 @@ func ArticleList() gin.HandlerFunc {
 func AddArticle() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		p := c.MustGet(ALL_PARAMES).(gin.H)
-		var article models.Article
-		err := mapstructure.Decode(p, &article)
+		var article = new(models.Article)
+		err := mapstructure.Decode(p, article)
 		if err != nil {
 			c.JSON(http.StatusOK, BaseRes{400, fmt.Sprintf("%v", err)})
 			return
 		}
-		err = models.DbOrm.Create(&article).Error
+		err = models.MyOrm.Create(article).Error
 		if err != nil {
-			panic(err)
+			c.JSON(http.StatusOK, BaseRes{401, fmt.Sprintf("%v", err)})
+			return
+		}
+		c.JSON(http.StatusOK, BodyRes{BaseRes{200, "Success"}, article})
+	}
+}
+
+func UpdateArticle() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		p := c.MustGet(ALL_PARAMES).(gin.H)
+		var article = new(models.Article)
+		err := mapstructure.Decode(p, article)
+		if err != nil {
 			c.JSON(http.StatusOK, BaseRes{400, fmt.Sprintf("%v", err)})
 			return
 		}
-		c.JSON(http.StatusOK, BodyRes{BaseRes{200, "Success"}, &article})
+		err = models.MyOrm.Save(article).Error
+		if err != nil {
+			c.JSON(http.StatusOK, BaseRes{401, fmt.Sprintf("%v", err)})
+			return
+		}
+		c.JSON(http.StatusOK, BodyRes{BaseRes{200, "Success"}, article})
+	}
+}
+
+func DeleteArticle() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		p := c.MustGet(ALL_PARAMES).(gin.H)
+		var article = new(models.Article)
+		err := mapstructure.Decode(p, article)
+		fmt.Println("DeleteArticle", article)
+		if err != nil || article.ID == 0 {
+			c.JSON(http.StatusOK, BaseRes{400, fmt.Sprintf("%v, %v", err, article.ID)})
+			return
+		}
+		err = models.MyOrm.Delete(article).Error
+		if err != nil {
+			c.JSON(http.StatusOK, BaseRes{401, fmt.Sprintf("%v", err)})
+			return
+		}
+		c.JSON(http.StatusOK, BodyRes{BaseRes{200, "Success"}, article})
 	}
 }

@@ -33,14 +33,13 @@ type BaseReq struct {
 func BaseVerify() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		//获取原始请求参数
-		var req BaseReq
-		err := c.ShouldBindJSON(&req)
+		var req = new(BaseReq)
+		err := c.ShouldBindJSON(req)
 		if err != nil {
-			fmt.Println(err)
 			c.AbortWithStatusJSON(http.StatusOK, BaseRes{400, "参数解析失败!"})
 			return
 		}
-		fmt.Println(req)
+		fmt.Println("middle BaseVerify", req)
 		m := req.Body
 
 		//以下是验证sign的流程

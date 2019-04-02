@@ -51,7 +51,7 @@ func Register() gin.HandlerFunc {
 
 		user.Name = name
 		user.Pwd = pwd
-		create := models.DbOrm.Create(&user)
+		create := models.MyOrm.Create(&user)
 		if create.Error != nil {
 			c.JSON(http.StatusOK, BaseRes{400, "注册失败!"})
 			return
@@ -81,7 +81,7 @@ func Modify() gin.HandlerFunc {
 		}
 
 		user.NickName = nickname
-		update := models.DbOrm.Model(&user).Update("NickName", nickname)
+		update := models.MyOrm.Model(&user).Update("NickName", nickname)
 		if update.Error != nil {
 			fmt.Println(update.Error)
 			c.JSON(http.StatusOK, BaseRes{400, "修改失败!" + fmt.Sprintf("%v", update.Error)})
