@@ -68,7 +68,7 @@ func DeleteArticle() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		p := c.MustGet(ALL_PARAMES).(gin.H)
 		var article = new(models.Article)
-		err := mapstructure.Decode(p, article)
+		err := mapstructure.Decode(p, &article.BaseModel)
 		fmt.Println("DeleteArticle", article)
 		if err != nil || article.ID == 0 {
 			c.JSON(http.StatusOK, BaseRes{400, fmt.Sprintf("%v, %v", err, article.ID)})
